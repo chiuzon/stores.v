@@ -31,28 +31,23 @@ fn test_update() {
 	assert primitive_int.value == 20
 }
 
+
 fn test_subscribe_for_set() {
 	println("Test subscribe for set function")
 
 	mut primitive_int := new_primitive<int>(10)
 	
-	mut value_check := -1
+	mut value_check := 1
+	mut value_check_ref := &value_check
 	
-	primitive_int.subscribe(fn [mut value_check](value int) {
-		println("Value ${value}")
-
-		value_check = value
+	primitive_int.subscribe(fn [mut value_check_ref](value int) {
+		
+		unsafe {
+			*value_check_ref = value
+		}
 	})
-
-	println(value_check)
-
+	
 	primitive_int.set(20)
-
-	println(value_check)
-
-	// primitive_int.update( fn (value int) int {
-	// 	return value * 2
-	// })
 
 	assert value_check == 20
 }
